@@ -4,6 +4,7 @@ version: ${project.version}
 
 description: Tokens Plugin for Spigot
 author: SirReason
+softdepends: [MVdWPlaceholderAPI]
 
 commands:
   tokens:

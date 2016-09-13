@@ -1,5 +1,8 @@
 package co.reasondev.prison;
 
+import be.maximvdw.placeholderapi.PlaceholderAPI;
+import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
+import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +25,7 @@ public class PrisonTokens extends JavaPlugin {
             getLogger().severe("Error! Could not connect to MySQL Database! Plugin disabling...");
             setEnabled(false);
         } else {
+            registerPlaceholder();
             getServer().getPluginManager().registerEvents(new PlayerListener(), this);
             getCommand("tokens").setExecutor(new TokensCommand(this));
             getLogger().info("has been enabled");
@@ -34,6 +38,20 @@ public class PrisonTokens extends JavaPlugin {
         }
         getSQLManager().closeConnection();
         getLogger().info("has been disabled");
+    }
+
+    private void registerPlaceholder() {
+        if (getServer().getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
+            PlaceholderAPI.registerPlaceholder(this, "tokens", new PlaceholderReplacer() {
+                @Override
+                public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+                    if (e.isOnline()) {
+                        return String.valueOf(getTokens(e.getPlayer()));
+                    }
+                    return String.valueOf(getTokens(e.getOfflinePlayer()));
+                }
+            });
+        }
     }
 
     public SQLManager getSQLManager() {
