@@ -9,3 +9,4 @@ softdepends: [MVdWPlaceholderAPI]
 commands:
   tokens:
     description: Main Token Command
+    aliases: [token]
