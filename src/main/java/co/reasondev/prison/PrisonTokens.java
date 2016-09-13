@@ -17,6 +17,7 @@ public class PrisonTokens extends JavaPlugin {
 
     public void onEnable() {
         saveDefaultConfig();
+        Settings.setConfig(getConfig());
         if(getSQLManager().openConnection() == null) {
             getLogger().severe("Error! Could not connect to MySQL Database! Plugin disabling...");
             setEnabled(false);

@@ -10,3 +10,45 @@ mySQL:
   DATABASE: tokens
   USERNAME: root
   PASSWORD: password
+
+## Plugin Message Configuration ##
+## Use \\n for a new line ##
+messages:
+  # Prefix to prepend to all messages #
+  PREFIX: '&6[&eTokens&6]'
+
+  # Help message for /tokens command #
+  TOKENS_HELP: '&7Try &6/tokens &7and one of the following:
+  \\n&6balance - &7get your current Tokens
+  \\n&6claim - &7claim your daily Token allowance every 24 hours
+  \\n&6deposit <amount> - &7deposit your physical Tokens
+  \\n&6withdraw <amount> - &7withdraw Tokens to physical form
+  \\n&6shop - &7warp to Tokens shop'
+
+  # Balance message shown when player uses /tokens balance #
+  # Use %d for the amount of Tokens #
+  BALANCE: '&6Tokens: &e%d'
+  # Balance message shown when an admin uses /tokens balance <player> #
+  # Use %s for the name of the Player to lookup #
+  # Use %d for the amount of Tokens #
+  BALANCE_OTHER: '&6Tokens &7[%s]&6: &e%d'
+
+  # Message sent when a Player successfully uses /tokens claim #
+  TOKENS_CLAIMED: '&aYou have successfully claimed &e10 Tokens'
+  # Message sent when a Player tries to use /tokens claim too soon #
+  CLAIM_COOLDOWN: '&cYou can only use this command once every 24 hours!'
+
+  # Message sent when a Player successfully uses /tokens withdraw <amount> #
+  # Use %d for the amount of Tokens withdrawn #
+  WITHDRAW_SUCCESS: '&aYou have successfully withdrawn &e%d Tokens'
+  # Message sent when a Player tries to withdraw more Tokens than they have #
+  WITHDRAW_FAILURE: '&cError! You do not have that many Tokens!'
+
+  # Message sent when a Player successfully uses /tokens deposit <amount> #
+  # Use %d for the amount of Tokens deposited #
+  DEPOSIT_SUCCESS: '&aYou have successfully deposited &e%d Tokens'
+  # Message sent when a Player tries to deposit more Tokens than they have #
+  DEPOSIT_FAILURE: '&cError! You do not have that many Tokens in your inventory!'
+
+  # Message to send when a Player uses /tokens shop #
+  SHOP_MESSAGE: '&eTeleporting to Tokens shop...'

@@ -1,7 +1,7 @@
 package co.reasondev.prison;
 
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -22,12 +22,7 @@ public class TokensCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(args.length < 1 || args[0].equalsIgnoreCase("help")) {
-            return msg(sender, "&7Try &6/tokens &7plus one of the following: " +
-                    "\n&6balance " + (sender.isOp() || sender.hasPermission("tokens.admin") ? "<player> " : "") + "- &7get your current Tokens" +
-                    "\n&6claim - &7claim your daily Token allowance every 24 hours" +
-                    "\n&6deposit <amount> - &7deposit your physical Tokens" +
-                    "\n&6withdraw <amount> - &7withdraw Tokens to physical form" +
-                    "\n&6shop - &7warp to Tokens shop");
+            return msg(sender, Settings.Messages.TOKENS_HELP);
         }
         //Balance Sub-Command
         if(args[0].equalsIgnoreCase("balance")) {
@@ -39,12 +34,12 @@ public class TokensCommand implements CommandExecutor {
                 if(toCheck == null) {
                     return err(sender, "Error! There is no Token data for that Player!");
                 }
-                return msg(sender, "&6" + toCheck.getName() + "'s Balance: &7" + PrisonTokens.getTokens(toCheck));
+                return msg(sender, Settings.Messages.BALANCE_OTHER, toCheck.getName(), PrisonTokens.getTokens(toCheck));
             }
             if(sender instanceof ConsoleCommandSender) {
                 return err(sender, "Error! This command cannot be run from the Console!");
             }
-            return msg(sender, "&6Tokens Balance: &7" + PrisonTokens.getTokens((OfflinePlayer) sender));
+            return msg(sender, Settings.Messages.BALANCE, PrisonTokens.getTokens((OfflinePlayer) sender));
         }
         //Claim Sub-Command
         if(args[0].equalsIgnoreCase("claim")) {
@@ -53,12 +48,12 @@ public class TokensCommand implements CommandExecutor {
             }
             long lastClaim = PrisonTokens.getLastClaim((OfflinePlayer) sender);
             if(System.currentTimeMillis() - lastClaim < 86400000) {
-                return err(sender, "Error! You must wait 24 hours in between Token claims!");
+                return err(sender, Settings.Messages.CLAIM_COOLDOWN.val());
             }
             Player p = (Player) sender;
             PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + 10);
             PrisonTokens.setLastClaim(p);
-            return msg(sender, "&aYou have successfully claimed your &610 Tokens");
+            return msg(sender, Settings.Messages.TOKENS_CLAIMED);
         }
         //Withdraw Sub-Command
         if(args[0].equalsIgnoreCase("withdraw")) {
@@ -76,12 +71,12 @@ public class TokensCommand implements CommandExecutor {
                 return err(sender, "Error! " + args[1] + " is not a number!");
             }
             if(PrisonTokens.getTokens(p) < amount) {
-                return err(sender, "Error! You do not have that many Tokens to withdraw!");
+                return err(sender, Settings.Messages.WITHDRAW_FAILURE.val());
             }
             ItemStack item = new ItemStack(Material.DOUBLE_PLANT, amount);
             p.getInventory().addItem(item);
             PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) - amount);
-            return msg(sender, "&aSuccessfully withdrew &6" + amount + " Tokens");
+            return msg(sender, Settings.Messages.WITHDRAW_SUCCESS, amount);
         }
         //Deposit Sub-Command
         if(args[0].equalsIgnoreCase("deposit")) {
@@ -89,7 +84,7 @@ public class TokensCommand implements CommandExecutor {
                 return err(sender, "Error! This command cannot be run from the Console!");
             }
             if(args.length < 2) {
-                return err(sender, "Invalid arguments! Try &6/tokens withdraw <amount>");
+                return err(sender, "Invalid arguments! Try &6/tokens deposit <amount>");
             }
             Player p = (Player) sender;
             int amount = 0;
@@ -105,7 +100,7 @@ public class TokensCommand implements CommandExecutor {
                 }
             }
             if(iAmount < amount) {
-                return err(sender, "Error! You do not have that many Tokens in your inventory!");
+                return err(sender, Settings.Messages.DEPOSIT_FAILURE.val());
             }
             for(int i = 0; i < p.getInventory().getSize() && amount > 0; i++) {
                 ItemStack item = p.getInventory().getItem(i);
@@ -121,7 +116,7 @@ public class TokensCommand implements CommandExecutor {
                 }
             }
             PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + Integer.parseInt(args[1]));
-            return msg(sender, "&aSuccessfully deposited &6" + args[1] + " Tokens");
+            return msg(sender, Settings.Messages.DEPOSIT_SUCCESS, Integer.parseInt(args[1]));
         }
         //Shop Sub-Command
         if(args[0].equalsIgnoreCase("shop")) {
@@ -129,23 +124,25 @@ public class TokensCommand implements CommandExecutor {
                 return err(sender, "Error! This command cannot be run from the Console!");
             }
             Bukkit.dispatchCommand(sender, "warp tokens");
-            return msg(sender, "&aWarping to Token Shop...");
+            return msg(sender, Settings.Messages.SHOP_MESSAGE);
         }
-        return msg(sender, "&7Try &6/tokens &7plus one of the following: " +
-                "\n&6balance " + (sender.isOp() || sender.hasPermission("tokens.admin") ? "<player> " : "") + "- &7get your current Tokens" +
-                "\n&6claim - &7claim your daily Token allowance every 24 hours" +
-                "\n&6deposit <amount> - &7deposit your physical item Tokens" +
-                "\n&6withdraw <amount> - &7withdraw Tokens to item form" +
-                "\n&6shop - &7warp to Tokens shop");
+        return msg(sender, Settings.Messages.TOKENS_HELP);
     }
 
     private boolean msg(CommandSender sender, String message) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+        sender.sendMessage(Settings.Messages.PREFIX.val() + " " + ChatColor.translateAlternateColorCodes('&', message));
         return true;
     }
 
+    private boolean msg(CommandSender sender, Settings.Messages message) {
+        return msg(sender, message.val());
+    }
+
+    private boolean msg(CommandSender sender, Settings.Messages message, Object... args) {
+        return msg(sender, String.format(message.val(), args));
+    }
+
     private boolean err(CommandSender sender, String message) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ChatColor.RED + message));
-        return true;
+        return msg(sender, ChatColor.RED + message);
     }
 }

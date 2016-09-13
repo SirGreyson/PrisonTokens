@@ -63,12 +63,13 @@ public class SQLManager {
             }
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" +
-                            plugin.getConfig().getString("mySQL.HOST") + ":" +
-                            plugin.getConfig().getString("mySQL.PORT") + "/" +
-                            plugin.getConfig().getString("mySQL.DATABASE"),
-                    plugin.getConfig().getString("mySQL.USERNAME"), plugin.getConfig().getString("mySQL.PASSWORD"));
+                            Settings.MySQL.HOST.val() + ":" +
+                            Settings.MySQL.PORT.val(),
+                    Settings.MySQL.USERNAME.val(), Settings.MySQL.PASSWORD.val());
+            //Create Schema if one doesn't exist
+            updateSQL("CREATE SCHEMA IF NOT EXISTS " + Settings.MySQL.DATABASE.val());
             //Create PlayerData Table in Schema
-            updateSQL("CREATE TABLE IF NOT EXISTS " + plugin.getConfig().getString("mySQL.DATABASE") + ".player_data (" +
+            updateSQL("CREATE TABLE IF NOT EXISTS " + Settings.MySQL.DATABASE.val() + ".player_data (" +
                     "player_id CHAR(36) NOT NULL, " +
                     "tokens INT NULL DEFAULT 0, " +
                     "last_claim BIGINT NULL DEFAULT 0, " +
