@@ -6,7 +6,7 @@
 
     <groupId>co.reasondev</groupId>
     <artifactId>PrisonTokens</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 
     <!-- Property Configuration -->
     <properties>

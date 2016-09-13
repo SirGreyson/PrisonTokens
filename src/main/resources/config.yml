@@ -3,6 +3,9 @@
 ## Amount of Tokens to give when Player uses /tokens claim ##
 CLAIM_AMOUNT: 10
 
+## Display name for the Token item ##
+DISPLAY_NAME: '&e&lTokens'
+
 ## MySQL Database Configuration ##
 mySQL:
   HOST: localhost
@@ -43,6 +46,9 @@ messages:
   WITHDRAW_SUCCESS: '&aYou have successfully withdrawn &e%d Tokens'
   # Message sent when a Player tries to withdraw more Tokens than they have #
   WITHDRAW_FAILURE: '&cError! You do not have that many Tokens!'
+  # Message sent when a Player tries to withdraw more Tokens than they have Inventory space for #
+  # Use %d for the amount of Tokens the Player successfully withdrew #
+  WITHDRAW_FAILURE_INVENTORY: '&cInventory full! Only able to withdraw &6%d Tokens'
 
   # Message sent when a Player successfully uses /tokens deposit <amount> #
   # Use %d for the amount of Tokens deposited #

@@ -13,10 +13,14 @@ public class Settings {
 
     public enum General {
 
-        CLAIM_AMOUNT;
+        CLAIM_AMOUNT, DISPLAY_NAME;
 
-        public int val() {
+        public int toInt() {
             return c.getInt(name());
+        }
+
+        public String toString() {
+            return ChatColor.translateAlternateColorCodes('&', c.getString(name()));
         }
     }
 
@@ -39,7 +43,7 @@ public class Settings {
 
         TOKENS_CLAIMED, CLAIM_COOLDOWN,
 
-        WITHDRAW_SUCCESS, WITHDRAW_FAILURE,
+        WITHDRAW_SUCCESS, WITHDRAW_FAILURE, WITHDRAW_FAILURE_INVENTORY,
 
         DEPOSIT_SUCCESS, DEPOSIT_FAILURE,
 

@@ -64,7 +64,8 @@ public class SQLManager {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" +
                             Settings.MySQL.HOST.val() + ":" +
-                            Settings.MySQL.PORT.val(),
+                            Settings.MySQL.PORT.val() + "/" +
+                            Settings.MySQL.DATABASE.val(),
                     Settings.MySQL.USERNAME.val(), Settings.MySQL.PASSWORD.val());
             //Create Schema if one doesn't exist
             updateSQL("CREATE SCHEMA IF NOT EXISTS " + Settings.MySQL.DATABASE.val());

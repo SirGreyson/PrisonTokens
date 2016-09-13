@@ -3,8 +3,11 @@ package co.reasondev.prison;
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -66,6 +69,46 @@ public class PrisonTokens extends JavaPlugin {
             TOKENS.put(player.getUniqueId(), sqlManager.getTokens(player));
         }
         return TOKENS.get(player.getUniqueId());
+    }
+
+    private static boolean isTokenItem(ItemStack i) {
+        return i != null && i.getType() == Material.DOUBLE_PLANT && i.hasItemMeta() &&
+                i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().equals(Settings.General.DISPLAY_NAME.toString());
+    }
+
+    public static int getTokenItems(Player player) {
+        int counter = 0;
+        for (ItemStack i : player.getInventory().getContents()) {
+            if (!isTokenItem(i)) {
+                continue;
+            }
+            counter += i.getAmount();
+        }
+        return counter;
+    }
+
+    public static HashMap<Integer, ItemStack> giveTokenItems(Player player, int amount) {
+        ItemStack i = new ItemStack(Material.DOUBLE_PLANT, amount);
+        ItemMeta meta = i.getItemMeta();
+        meta.setDisplayName(Settings.General.DISPLAY_NAME.toString());
+        i.setItemMeta(meta);
+        return player.getInventory().addItem(i);
+    }
+
+    public static void takeTokenItems(Player player, int amount) {
+        for (int i = 0; i < player.getInventory().getSize() && amount > 0; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (!isTokenItem(item)) {
+                continue;
+            }
+            final int count = item.getAmount();
+            if (item.getAmount() <= amount) {
+                player.getInventory().setItem(i, null);
+            } else {
+                item.setAmount(item.getAmount() - amount);
+            }
+            amount -= count;
+        }
     }
 
     public static void setTokens(OfflinePlayer player, int amount) {

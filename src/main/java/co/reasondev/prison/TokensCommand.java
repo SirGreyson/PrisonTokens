@@ -2,7 +2,6 @@ package co.reasondev.prison;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 public class TokensCommand implements CommandExecutor {
 
@@ -51,7 +52,7 @@ public class TokensCommand implements CommandExecutor {
                 return err(sender, Settings.Messages.CLAIM_COOLDOWN.val());
             }
             Player p = (Player) sender;
-            PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + 10);
+            PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + Settings.General.CLAIM_AMOUNT.toInt());
             PrisonTokens.setLastClaim(p);
             return msg(sender, Settings.Messages.TOKENS_CLAIMED);
         }
@@ -73,8 +74,12 @@ public class TokensCommand implements CommandExecutor {
             if(PrisonTokens.getTokens(p) < amount) {
                 return err(sender, Settings.Messages.WITHDRAW_FAILURE.val());
             }
-            ItemStack item = new ItemStack(Material.DOUBLE_PLANT, amount);
-            p.getInventory().addItem(item);
+            HashMap<Integer, ItemStack> failed = PrisonTokens.giveTokenItems(p, amount);
+            if (!failed.isEmpty()) {
+                amount -= failed.get(0).getAmount();
+                PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) - amount);
+                return msg(sender, Settings.Messages.WITHDRAW_FAILURE_INVENTORY, amount);
+            }
             PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) - amount);
             return msg(sender, Settings.Messages.WITHDRAW_SUCCESS, amount);
         }
@@ -93,30 +98,12 @@ public class TokensCommand implements CommandExecutor {
             } catch (NumberFormatException e) {
                 return err(sender, "Error! " + args[1] + " is not a number!");
             }
-            int iAmount = 0;
-            for(ItemStack i : p.getInventory().getContents()) {
-                if(i != null && i.getType() == Material.DOUBLE_PLANT) {
-                    iAmount += i.getAmount();
-                }
-            }
-            if(iAmount < amount) {
+            if (PrisonTokens.getTokenItems(p) < amount) {
                 return err(sender, Settings.Messages.DEPOSIT_FAILURE.val());
             }
-            for(int i = 0; i < p.getInventory().getSize() && amount > 0; i++) {
-                ItemStack item = p.getInventory().getItem(i);
-                if(item == null || item.getType() != Material.DOUBLE_PLANT) {
-                    continue;
-                }
-                if(item.getAmount() <= amount) {
-                    p.getInventory().setItem(i, null);
-                    amount -= item.getAmount();
-                } else {
-                    item.setAmount(item.getAmount() - amount);
-                    break;
-                }
-            }
-            PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + Integer.parseInt(args[1]));
-            return msg(sender, Settings.Messages.DEPOSIT_SUCCESS, Integer.parseInt(args[1]));
+            PrisonTokens.takeTokenItems(p, amount);
+            PrisonTokens.setTokens(p, PrisonTokens.getTokens(p) + amount);
+            return msg(sender, Settings.Messages.DEPOSIT_SUCCESS, amount);
         }
         //Shop Sub-Command
         if(args[0].equalsIgnoreCase("shop")) {
