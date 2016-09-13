@@ -1,0 +1,10 @@
+main: co.reasondev.prison.PrisonTokens
+name: ${project.artifactId}
+version: ${project.version}
+
+description: Tokens Plugin for Spigot
+author: SirReason
+
+commands:
+  tokens:
+    description: Main Token Command

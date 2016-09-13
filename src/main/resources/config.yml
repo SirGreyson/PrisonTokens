@@ -1,0 +1,12 @@
+### PrisonTokens Plugin Configuration ###
+
+## Amount of Tokens to give when Player uses /tokens claim ##
+CLAIM_AMOUNT: 10
+
+## MySQL Database Configuration ##
+mySQL:
+  HOST: localhost
+  PORT: 3306
+  DATABASE: tokens
+  USERNAME: root
+  PASSWORD: password
