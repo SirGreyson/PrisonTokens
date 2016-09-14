@@ -83,7 +83,7 @@ public class PrisonTokens extends JavaPlugin {
     public static void takeBothTokens(Player player, int amount) {
         int left = takeTokenItems(player, amount);
         if (left > 0) {
-            setTokens(player, getTokens(player) - amount);
+            setTokens(player, getTokens(player) - left);
         }
     }
 
@@ -120,6 +120,7 @@ public class PrisonTokens extends JavaPlugin {
             }
             amount -= count;
         }
+        System.out.println(amount);
         return amount;
     }
 
