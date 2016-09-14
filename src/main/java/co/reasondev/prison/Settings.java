@@ -13,7 +13,7 @@ public class Settings {
 
     public enum General {
 
-        CLAIM_AMOUNT, DISPLAY_NAME;
+        CLAIM_AMOUNT, DISPLAY_NAME, DEPOSIT_TITLE, DEPOSIT_SIGN, WITHDRAW_SIGN;
 
         public int toInt() {
             return c.getInt(name());

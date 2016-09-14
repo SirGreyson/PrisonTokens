@@ -6,6 +6,15 @@ CLAIM_AMOUNT: 10
 ## Display name for the Token item ##
 DISPLAY_NAME: '&e&lTokens'
 
+## Display name for the Deposit Tokens GUI and Signs ##
+## This goes on the second line
+DEPOSIT_TITLE: '&e&lAdd Tokens to Deposit'
+
+## Display name for the Deposit Tokens signs ##
+DEPOSIT_SIGN: '&e&lDeposit Tokens'
+## Display name for the Withdraw Tokens signs ##
+WITHDRAW_SIGN: '&a&lWithdraw Tokens'
+
 ## MySQL Database Configuration ##
 mySQL:
   HOST: localhost

@@ -71,9 +71,20 @@ public class PrisonTokens extends JavaPlugin {
         return TOKENS.get(player.getUniqueId());
     }
 
-    private static boolean isTokenItem(ItemStack i) {
+    public static boolean isTokenItem(ItemStack i) {
         return i != null && i.getType() == Material.DOUBLE_PLANT && i.hasItemMeta() &&
                 i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().equals(Settings.General.DISPLAY_NAME.toString());
+    }
+
+    public static int getBothTokens(Player player) {
+        return getTokens(player) + getTokenItems(player);
+    }
+
+    public static void takeBothTokens(Player player, int amount) {
+        int left = takeTokenItems(player, amount);
+        if (left > 0) {
+            setTokens(player, getTokens(player) - amount);
+        }
     }
 
     public static int getTokenItems(Player player) {
@@ -95,7 +106,7 @@ public class PrisonTokens extends JavaPlugin {
         return player.getInventory().addItem(i);
     }
 
-    public static void takeTokenItems(Player player, int amount) {
+    public static int takeTokenItems(Player player, int amount) {
         for (int i = 0; i < player.getInventory().getSize() && amount > 0; i++) {
             ItemStack item = player.getInventory().getItem(i);
             if (!isTokenItem(item)) {
@@ -109,6 +120,7 @@ public class PrisonTokens extends JavaPlugin {
             }
             amount -= count;
         }
+        return amount;
     }
 
     public static void setTokens(OfflinePlayer player, int amount) {
