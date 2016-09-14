@@ -120,7 +120,6 @@ public class PrisonTokens extends JavaPlugin {
             }
             amount -= count;
         }
-        System.out.println(amount);
         return amount;
     }
 
