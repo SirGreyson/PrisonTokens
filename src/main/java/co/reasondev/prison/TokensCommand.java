@@ -113,6 +113,26 @@ public class TokensCommand implements CommandExecutor {
             Bukkit.dispatchCommand(sender, "warp tokens");
             return msg(sender, Settings.Messages.SHOP_MESSAGE);
         }
+        //Give Sub-Command
+        if (args[0].equalsIgnoreCase("give")) {
+            if (!sender.isOp() && !sender.hasPermission("tokens.admin")) {
+                return err(sender, "You do not have permission to run this command!");
+            }
+            if (args.length != 3) {
+                return err(sender, "Invalid arguments! Try &6/tokens give <player> <amount>");
+            }
+            OfflinePlayer toGive = plugin.getServer().getOfflinePlayer(args[1]);
+            if (toGive == null) {
+                return err(sender, "Error! There is no Player in the database with that name!");
+            }
+            try {
+                int amount = Integer.parseInt(args[2]);
+                PrisonTokens.setTokens(toGive, PrisonTokens.getTokens(toGive) + amount);
+                return msg(sender, "&aSuccessfully gave &e" + amount + " Tokens &ato &e" + toGive.getName());
+            } catch (NumberFormatException e) {
+                return err(sender, "Error! " + args[2] + " is not a number!");
+            }
+        }
         return msg(sender, Settings.Messages.TOKENS_HELP);
     }
 

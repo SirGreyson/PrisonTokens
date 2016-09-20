@@ -24,18 +24,18 @@ mySQL:
   PASSWORD: password
 
 ## Plugin Message Configuration ##
-## Use \\n for a new line ##
+## Use \n for a new line ##
 messages:
   # Prefix to prepend to all messages #
   PREFIX: '&6[&eTokens&6]'
 
   # Help message for /tokens command #
   TOKENS_HELP: '&7Try &6/tokens &7and one of the following:
-  \\n&6balance - &7get your current Tokens
-  \\n&6claim - &7claim your daily Token allowance every 24 hours
-  \\n&6deposit <amount> - &7deposit your physical Tokens
-  \\n&6withdraw <amount> - &7withdraw Tokens to physical form
-  \\n&6shop - &7warp to Tokens shop'
+  \n&6balance - &7get your current Tokens
+  \n&6claim - &7claim your daily Token allowance every 24 hours
+  \n&6deposit <amount> - &7deposit your physical Tokens
+  \n&6withdraw <amount> - &7withdraw Tokens to physical form
+  \n&6shop - &7warp to Tokens shop'
 
   # Balance message shown when player uses /tokens balance #
   # Use %d for the amount of Tokens #
